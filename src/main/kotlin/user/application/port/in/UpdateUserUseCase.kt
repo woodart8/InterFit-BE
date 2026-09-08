@@ -1,0 +1,11 @@
+package user.application.port.`in`
+
+import user.domain.User
+
+interface UpdateUserUseCase {
+
+    fun updateUser(
+        id: Long,
+        name: String
+    ): User
+}
