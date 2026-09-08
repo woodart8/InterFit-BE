@@ -3,6 +3,7 @@ package com.gentle.interfit.auth.application.service
 import com.gentle.interfit.auth.application.dto.LoginResult
 import com.gentle.interfit.auth.application.dto.RefreshResult
 import com.gentle.interfit.auth.application.port.`in`.LoginUseCase
+import com.gentle.interfit.auth.application.port.`in`.LogoutUseCase
 import com.gentle.interfit.auth.application.port.`in`.RefreshUseCase
 import com.gentle.interfit.auth.application.port.`in`.SignUpUseCase
 import com.gentle.interfit.auth.application.port.out.PasswordEncoderPort
@@ -22,7 +23,7 @@ class AuthService(
     private val passwordEncoderPort: PasswordEncoderPort,
     private val tokenProviderPort: TokenProviderPort,
     private val refreshTokenPort: RefreshTokenPort
-) : SignUpUseCase, LoginUseCase, RefreshUseCase {
+) : SignUpUseCase, LoginUseCase, RefreshUseCase, LogoutUseCase {
 
     @Transactional
     override fun signUp(
@@ -61,7 +62,8 @@ class AuthService(
         val accessToken = tokenProviderPort.generateAccessToken(
             userId = user.id
                 ?: throw IllegalStateException("사용자 ID가 존재하지 않습니다."),
-            email = user.email
+            email = user.email,
+            role = user.role
         )
 
         val refreshToken = tokenProviderPort.generateRefreshToken(userId = user.id)
@@ -101,7 +103,8 @@ class AuthService(
 
         val newAccessToken = tokenProviderPort.generateAccessToken(
             userId = userId,
-            email = user.email
+            email = user.email,
+            role = user.role
         )
 
         val newRefreshToken = tokenProviderPort.generateRefreshToken(
@@ -117,5 +120,9 @@ class AuthService(
             accessToken = newAccessToken,
             refreshToken = newRefreshToken
         )
+    }
+
+    override fun logout(userId: Long) {
+        refreshTokenPort.delete(userId)
     }
 }

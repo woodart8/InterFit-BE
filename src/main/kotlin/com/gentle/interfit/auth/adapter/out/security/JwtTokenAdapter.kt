@@ -3,6 +3,7 @@ package com.gentle.interfit.auth.adapter.out.security
 import com.gentle.interfit.auth.application.port.out.TokenProviderPort
 import com.gentle.interfit.common.exception.BusinessException
 import com.gentle.interfit.common.exception.ErrorCode
+import io.jsonwebtoken.Jwt
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -32,7 +33,8 @@ class JwtTokenAdapter(
 
     override fun generateAccessToken(
         userId: Long,
-        email: String
+        email: String,
+        role: String
     ): String {
 
         return generateToken(
@@ -40,7 +42,8 @@ class JwtTokenAdapter(
             expiration = accessTokenExpiration,
             claims = mapOf(
                 "email" to email,
-                "type" to "access"
+                "type" to "access",
+                "role" to role
             )
         )
     }
@@ -81,6 +84,16 @@ class JwtTokenAdapter(
             .payload
             .subject
             .toLong()
+    }
+
+    override fun getRole(token: String): String {
+        return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload["role"]
+            ?.toString()
+            ?: throw BusinessException(ErrorCode.INVALID_ACCESS_TOKEN)
     }
 
     override fun getTokenType(token: String): String {

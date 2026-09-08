@@ -22,6 +22,11 @@ enum class ErrorCode(
         "이메일 또는 비밀번호가 올바르지 않습니다."
     ),
 
+    INVALID_ACCESS_TOKEN(
+        HttpStatus.UNAUTHORIZED,
+        "유효하지 않은 Access Token입니다."
+    ),
+
     INVALID_REFRESH_TOKEN(
         HttpStatus.UNAUTHORIZED,
         "유효하지 않은 Refresh Token입니다."

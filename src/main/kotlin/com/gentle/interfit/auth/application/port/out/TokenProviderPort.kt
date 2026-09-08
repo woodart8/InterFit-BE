@@ -4,7 +4,8 @@ interface TokenProviderPort {
 
     fun generateAccessToken(
         userId: Long,
-        email: String
+        email: String,
+        role: String,
     ): String
 
     fun generateRefreshToken(
@@ -16,4 +17,6 @@ interface TokenProviderPort {
     fun getUserId(token: String): Long
 
     fun getTokenType(token: String): String
+
+    fun getRole(token: String): String
 }
