@@ -2,13 +2,13 @@ package com.gentle.interfit.user.application.service
 
 import com.gentle.interfit.common.exception.BusinessException
 import com.gentle.interfit.common.exception.ErrorCode
+import com.gentle.interfit.user.application.port.`in`.DeleteUserUseCase
+import com.gentle.interfit.user.application.port.`in`.GetUserUseCase
+import com.gentle.interfit.user.application.port.`in`.UpdateUserUseCase
+import com.gentle.interfit.user.application.port.out.UserPersistencePort
+import com.gentle.interfit.user.domain.User
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import user.application.port.`in`.DeleteUserUseCase
-import user.application.port.`in`.GetUserUseCase
-import user.application.port.`in`.UpdateUserUseCase
-import user.application.port.out.UserPersistencePort
-import user.domain.User
 
 @Service
 @Transactional(readOnly = true)

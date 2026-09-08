@@ -1,8 +1,8 @@
 package com.gentle.interfit.user.adapter.out.persistence
 
+import com.gentle.interfit.user.application.port.out.UserPersistencePort
+import com.gentle.interfit.user.domain.User
 import org.springframework.stereotype.Component
-import user.application.port.out.UserPersistencePort
-import user.domain.User
 
 @Component
 class UserPersistenceAdapter(
@@ -14,7 +14,8 @@ class UserPersistenceAdapter(
         val entity = if (user.id == null) {
             UserEntity(
                 name = user.name,
-                email = user.email
+                email = user.email,
+                password = user.password,
             )
         } else {
             userJpaRepository.findById(user.id)
@@ -39,6 +40,11 @@ class UserPersistenceAdapter(
             ?.toDomain()
     }
 
+    override fun findByEmail(email: String): User? {
+        return userJpaRepository.findByEmail(email)
+            ?.toDomain()
+    }
+
     override fun findAll(): List<User> {
         return userJpaRepository.findAll()
             .map { it.toDomain() }
@@ -52,7 +58,8 @@ class UserPersistenceAdapter(
         return User(
             id = id,
             name = name,
-            email = email
+            email = email,
+            password = password,
         )
     }
 }

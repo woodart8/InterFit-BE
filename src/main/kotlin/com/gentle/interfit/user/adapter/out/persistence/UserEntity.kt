@@ -14,5 +14,8 @@ class UserEntity(
     var name: String,
 
     @Column(nullable = false, unique = true)
-    val email: String
+    val email: String,
+
+    @Column(nullable = false)
+    val password: String
 )

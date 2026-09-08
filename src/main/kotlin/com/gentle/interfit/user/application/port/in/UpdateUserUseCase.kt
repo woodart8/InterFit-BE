@@ -1,6 +1,6 @@
 package com.gentle.interfit.user.application.port.`in`
 
-import user.domain.User
+import com.gentle.interfit.user.domain.User
 
 interface UpdateUserUseCase {
 
