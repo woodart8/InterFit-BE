@@ -33,7 +33,9 @@ class SecurityConfig(
                     .requestMatchers(
                         "/api/auth/signup",
                         "/api/auth/login",
-                        "/api/auth/refresh"
+                        "/api/auth/refresh",
+                        "/api/interviews",
+                        "/api/interviews/{interviewId}/answer",
                     ).permitAll()
 
                     .requestMatchers("/api/auth/logout")
