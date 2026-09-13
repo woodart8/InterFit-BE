@@ -2,10 +2,7 @@ package com.gentle.interfit.interview.adapter.out.ai.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class InterviewAnswerResponse(
-    @JsonProperty("interview_id")
-    val interviewId: String,
-
+data class InterviewGenerateFollowUpRequest (
     @JsonProperty("question_id")
-    val questionId: String,
+    val questionId : String,
 )

@@ -1,6 +1,6 @@
 package com.gentle.interfit.interview.application.port.`in`.dto
 
-data class SubmitAnswerResult(
-    val interviewId: String,
+data class GenerateNewQuestionResult (
     val questionId: String,
+    val content: String
 )

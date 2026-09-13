@@ -2,6 +2,8 @@ package com.gentle.interfit.interview.adapter.out.ai
 
 import com.gentle.interfit.interview.adapter.out.ai.dto.InterviewAnswerRequest
 import com.gentle.interfit.interview.adapter.out.ai.dto.InterviewAnswerResponse
+import com.gentle.interfit.interview.adapter.out.ai.dto.InterviewGenerateFollowUpRequest
+import com.gentle.interfit.interview.adapter.out.ai.dto.InterviewQuestion
 import com.gentle.interfit.interview.adapter.out.ai.dto.InterviewStartRequest
 import com.gentle.interfit.interview.adapter.out.ai.dto.InterviewStartResponse
 import com.gentle.interfit.interview.application.port.out.InterviewAiPort
@@ -49,6 +51,34 @@ class FastApiInterviewAdapter(
             )
             .retrieve()
             .bodyToMono<InterviewAnswerResponse>()
+            .awaitSingle()
+    }
+
+    override suspend fun generateNewQuestion(
+        interviewId: String
+    ): InterviewQuestion {
+
+        return webClient.post()
+            .uri("/api/interviews/$interviewId/questions/new")
+            .retrieve()
+            .bodyToMono<InterviewQuestion>()
+            .awaitSingle()
+    }
+
+    override suspend fun generateFollowUpQuestion(
+        interviewId: String,
+        questionId: String
+    ): InterviewQuestion {
+
+        return webClient.post()
+            .uri("/api/interviews/$interviewId/questions/follow-up")
+            .bodyValue(
+                InterviewGenerateFollowUpRequest(
+                    questionId = questionId,
+                )
+            )
+            .retrieve()
+            .bodyToMono<InterviewQuestion>()
             .awaitSingle()
     }
 }

@@ -1,10 +1,14 @@
 package com.gentle.interfit.interview.adapter.`in`.web
 
+import com.gentle.interfit.interview.adapter.`in`.web.dto.GenerateFollowUpRequest
+import com.gentle.interfit.interview.adapter.`in`.web.dto.InterviewQuestion
 import com.gentle.interfit.interview.adapter.`in`.web.dto.StartInterviewRequest
 import com.gentle.interfit.interview.adapter.`in`.web.dto.StartInterviewResponse
 import com.gentle.interfit.interview.adapter.`in`.web.dto.SubmitAnswerRequest
 import com.gentle.interfit.interview.adapter.`in`.web.dto.SubmitAnswerResponse
 import com.gentle.interfit.interview.application.port.`in`.InterviewUseCase
+import com.gentle.interfit.interview.application.port.`in`.dto.GenerateFollowUpQuestionCommand
+import com.gentle.interfit.interview.application.port.`in`.dto.GenerateNewQuestionCommand
 import com.gentle.interfit.interview.application.port.`in`.dto.StartInterviewCommand
 import com.gentle.interfit.interview.application.port.`in`.dto.SubmitAnswerCommand
 import org.springframework.http.ResponseEntity
@@ -34,9 +38,9 @@ class InterviewController(
         return ResponseEntity.ok(
             StartInterviewResponse(
                 interviewId = result.interviewId,
-                question = StartInterviewResponse.Question(
-                    id = result.questionId,
-                    content = result.questionContent
+                interviewQuestion = InterviewQuestion(
+                    questionId = result.questionId,
+                    content = result.content
                 )
             )
         )
@@ -59,12 +63,47 @@ class InterviewController(
         return ResponseEntity.ok(
             SubmitAnswerResponse(
                 interviewId = result.interviewId,
+                questionId = result.questionId
+            )
+        )
+    }
+
+    @PostMapping("/{interviewId}/questions/new")
+    suspend fun generateNewQuestion(
+        @PathVariable interviewId: String
+    ): ResponseEntity<InterviewQuestion> {
+
+        val result = interviewUseCase.generateNewQuestion(
+            GenerateNewQuestionCommand(
+                interviewId = interviewId
+            )
+        )
+
+        return ResponseEntity.ok(
+            InterviewQuestion(
                 questionId = result.questionId,
-                answer = result.answer,
-                nextQuestion = SubmitAnswerResponse.Question(
-                    id = result.nextQuestionId,
-                    content = result.nextQuestionContent
-                )
+                content = result.content
+            )
+        )
+    }
+
+    @PostMapping("/{interviewId}/questions/follow-up")
+    suspend fun generateFollowUpQuestion(
+        @PathVariable interviewId: String,
+        @RequestBody request: GenerateFollowUpRequest
+    ): ResponseEntity<InterviewQuestion> {
+
+        val result = interviewUseCase.generateFollowUpQuestion(
+            GenerateFollowUpQuestionCommand(
+                interviewId = interviewId,
+                questionId = request.questionId,
+            )
+        )
+
+        return ResponseEntity.ok(
+            InterviewQuestion(
+                questionId = result.questionId,
+                content = result.content
             )
         )
     }
